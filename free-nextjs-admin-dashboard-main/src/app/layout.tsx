@@ -5,6 +5,7 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function RootLayout({
   children,
@@ -14,11 +15,18 @@ export default function RootLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // const pathname = usePathname();
+  const pathname = usePathname();
+  const router= useRouter()
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      router.push("login")
+    }
+
+  }, [pathname]);
 
   return (
     <html lang="en">

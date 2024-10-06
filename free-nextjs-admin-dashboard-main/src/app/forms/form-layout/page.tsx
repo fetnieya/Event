@@ -1,28 +1,44 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import Link from "next/link";
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import { Event } from "@/types/product";
 import {
   Dialog,
   DialogBackdrop,
-  DialogPanel,
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  
+  DialogPanel
 } from '@headlessui/react';
 import { TECarousel, TECarouselItem } from "tw-elements-react";
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import axios from "axios";
 
 
 
 
 export default function Example() {
   const [open, setOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [event, setEvent] = useState<Event>({});
+  const getData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/eventList');
+      setEvents(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+
+
+  useEffect(() => {
+    getData();
+  }, []);
+  const handleClick = () => {
+    setShowMore(!showMore);
+  };
   return (
     <div className="bg-white">
-      {/* Mobile menu */}
       <Dialog open={open} onClose={() => setOpen(false)} className="relative z-40 lg:hidden">
         <DialogBackdrop
           transition
@@ -225,6 +241,61 @@ export default function Example() {
           </div>
            {/*  Event Cart */}
            <div className="flex space-x-4">
+           <div className="flex flex-wrap gap-4">
+      {events.map((event) => (
+        <div
+          key={event.name}
+          className="flex flex-col justify-start p-4 border rounded-lg shadow-lg w-80"
+        >
+          <h5 className="mb-2 text-xl font-medium text-neutral-800 dark:text-neutral-50">
+            {event.name}
+          </h5>
+          <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
+            {event.description}
+          </p>
+          {open && (
+            <div>
+              <p>Location: {event.place}</p>
+            </div>
+          )}
+          <Link
+            href={`/overviewsEvent/${event._id}`}
+            className="inline-flex items-center justify-center gap-2.5 rounded-full bg-black px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+          >
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+                />
+              </svg>
+            </span>
+            Reserve
+          </Link>
+        </div>
+      ))}
+    
+
+    </div>
+
+
+  
+
+  
+</div>
+
+<div className="flex justify-center mt-4"> 
+<div className="p-6">
+<p className={`transition-all duration-500 ${showMore ? 'h-auto' : 'h-20 overflow-hidden'}`}>
+<div className="flex space-x-4">
   <div className="flex flex-col rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:max-w-xl md:flex-row">
     <img
       className="h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
@@ -315,20 +386,30 @@ export default function Example() {
     </div>
   </div>
 </div>
-
-<div className="flex justify-center mt-4"> 
-      <Link
-        href="#"
-        className="inline-flex items-center justify-center gap-2.5 rounded-full bg-black px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-             >
-        <span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
-</svg>
-
-        </span>
-       Load more
-      </Link>
+      </p>
+<button
+      onClick={handleClick}
+      className="bg-indigo-50 text-indigo-600 rounded-full cursor-pointer font-semibold text-center shadow-xs transition-all duration-100 py-3 px-6 text-sm hover:bg-indigo-100 flex items-center justify-center"
+    >
+      {/* SVG Icon */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={`w-5 h-5 mr-2 transition-transform duration-300 ${showMore ? 'rotate-180' : 'rotate-0'}`}
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M19 9l-7 7-7-7"
+          className="text-violet-600" // Change the color to violet
+        />
+      </svg>
+      {showMore ? 'Show Less' : 'Show More'}
+    </button>
+    </div>
     </div>
   </div>
 </div>
@@ -515,3 +596,7 @@ export default function Example() {
     </div>
   );
 }
+function setEvents(data: any) {
+  throw new Error("Function not implemented.");
+}
+

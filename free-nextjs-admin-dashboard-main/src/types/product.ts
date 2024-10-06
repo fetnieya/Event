@@ -1,10 +1,8 @@
 // types.ts
-export type Product = {
-  image: string;
-  ID: number;
+export type Event = {
   name: string;
   description: string;
   price: number;
-  date: Date;
+  date: string;
   place: string;
 };

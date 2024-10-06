@@ -1,9 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const SelectGroupTwo: React.FC = () => {
+const SelectGroupTwo: React.FC = (props) => {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
+  useEffect(()=>{
+    console.log({props});
+    setSelectedOption(props.selectedItem)
+  },[props])
 
   const changeTextColor = () => {
     setIsOptionSelected(true);
@@ -28,6 +32,7 @@ const SelectGroupTwo: React.FC = () => {
           onChange={(e) => {
             setSelectedOption(e.target.value);
             changeTextColor();
+            
           }}
           className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-12 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input ${
             isOptionSelected ? "text-black dark:text-white" : ""
@@ -36,13 +41,13 @@ const SelectGroupTwo: React.FC = () => {
           <option value="" disabled className="text-body dark:text-bodydark">
          
           </option>
-          <option value="USA" className="text-body dark:text-bodydark">
-            Administrateur
+          <option value="Admin" className="text-body dark:text-bodydark">
+            Admin
           </option>
-          <option value="UK" className="text-body dark:text-bodydark">
-           Organisateur
+          <option value="Organizer" className="text-body dark:text-bodydark">
+           Organizer
           </option>
-          <option value="Canada" className="text-body dark:text-bodydark">
+          <option value="Participant" className="text-body dark:text-bodydark">
             Participant
           </option>
         </select>

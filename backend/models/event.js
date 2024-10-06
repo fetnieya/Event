@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
-    ID: { type: String, required: true },
     name: { type: String, required: true },
-    description: { type: String, required: true },
-    date: { type: Date, required: true },
-    place: { type: String, required: true },
-    price: { type: Number, required: true }
+    description: { type: String },
+    date: { type: Date },
+    place: { type: String },
+    price: { type: Number }
 });
 
 const Event = mongoose.model('Event', eventSchema);
